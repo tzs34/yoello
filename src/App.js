@@ -1,25 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect, useReducer } from "react";
+import ProductProvider from "./context/ProductContext";
+import { foodTypes } from "../src/reducer/types";
+
+import { SwipeView as SwipeableProductView, ToolBar } from "./components";
+
+const { ALL_FOODS } = foodTypes;
+
+const styles = {
+  tabs: {
+    background: "#fff",
+  },
+};
 
 function App() {
+  const [index, setindex] = useState(ALL_FOODS.index);
+
+  const handleViewChange = (index) => {
+    setindex(index);
+  };
+
+  const categories = Object.values(foodTypes);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ProductProvider>
+      <div>
+        <ToolBar
+          index={index}
+          categories={categories}
+          onChange={handleViewChange}
+          style={styles.tabs}
+        />
+        <SwipeableProductView
+          enableMouseEvents
+          index={index}
+          categories={categories}
+          onChangeIndex={handleViewChange}
+          onSwipe
+        />
+      </div>
+    </ProductProvider>
   );
 }
 
